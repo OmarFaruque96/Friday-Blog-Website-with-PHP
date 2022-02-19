@@ -27,15 +27,12 @@
     if(isset($_GET['delete_id'])){
 
         $del_id = $_GET['delete_id'];
+        $table = 'category';
+        $key   = 'c_id';
+        $redirect = 'category.php';
 
-        $delete_query = "DELETE FROM category WHERE cat_id = '$del_id'";
-        $result = mysqli_query($db, $delete_query);
-
-        if($result){
-            header('Location: category.php');
-        }else{
-            die("Category delete error.".mysqli_error($db));
-        }
+        //delete($table,$key,$del_id,$redirect);
+        delete($table,$key,$del_id,$redirect);
     }
 
     
@@ -254,7 +251,6 @@
                                                             </td>
                                                         </tr>
                                                               <?php
-
                                                             }
 
                                                         ?>
@@ -277,3 +273,6 @@
 
     <?php include "includes/footer.php"; ?>
 </div>
+
+
+navanaafroz10@gmail.com

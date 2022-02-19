@@ -1,4 +1,21 @@
-<?php include "connection.php"; ?>
+<?php 
+
+include "connection.php";
+include "functions.php"; 
+ob_start();
+session_start();
+
+if($_SESSION['user_role'] == 0){
+  header('Location: ../../index.php');
+}
+
+if(empty($_SESSION['u_id'])){
+  header('Location: index.php');
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,9 +35,14 @@
   <!-- Plugin css for this page -->
   <link rel="stylesheet" href="assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
   <link rel="stylesheet" href="assets/js/select.dataTables.min.css">
+  <!-- profile page css -->
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/3.6.95/css/materialdesignicons.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="assets/css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="assets/css/profile.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="assets/images/favicon.png" />
   <style type="text/css">
@@ -33,25 +55,7 @@
   </style>
 </head>
 <body>
-  <div class="container-scroller">
-    <div class="row p-0 m-0 proBanner" id="proBanner">
-      <div class="col-md-12 p-0 m-0">
-        <div class="card-body card-body-padding d-flex align-items-center justify-content-between">
-          <div class="ps-lg-1">
-            <div class="d-flex align-items-center justify-content-between">
-              <p class="mb-0 font-weight-medium me-3 buy-now-text">Free 24/7 customer support, updates, and more with this template!</p>
-              <a href="https://www.bootstrapdash.com/product/star-admin-pro/?utm_source=organic&utm_medium=banner&utm_campaign=buynow_demo" target="_blank" class="btn me-2 buy-now-btn border-0">Get Pro</a>
-            </div>
-          </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <a href="https://www.bootstrapdash.com/product/star-admin-pro/"><i class="mdi mdi-home me-3 text-white"></i></a>
-            <button id="bannerClose" class="btn border-0 p-0">
-              <i class="mdi mdi-close text-white me-0"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
@@ -72,7 +76,9 @@
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">John Doe</span></h1>
+            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">
+              <?php echo $_SESSION['u_name'];?>
+            </span></h1>
             <h3 class="welcome-sub-text">Your performance summary this week </h3>
           </li>
         </ul>
@@ -204,18 +210,44 @@
           </li>
           <li class="nav-item dropdown d-none d-lg-block user-dropdown">
             <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-              <img class="img-xs rounded-circle" src="assets/images/faces/face8.jpg" alt="Profile image"> </a>
+              <?php 
+
+              if(empty($_SESSION['u_image'])){
+                  ?>
+                  <img src="assets/images/users/default.png" width="80px">
+                  <?php
+              }else{
+                  ?>
+                  <img class="img-md rounded-circle" src="assets/images/users/<?php echo $_SESSION['u_image'];?>" style="width: 40px" alt="Profile image">
+                  <?php
+              }
+
+              ?>
+              
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
-                <img class="img-md rounded-circle" src="assets/images/faces/face8.jpg" alt="Profile image">
-                <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-                <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                <?php 
+
+                if(empty($_SESSION['u_image'])){
+                  ?>
+                  <img src="assets/images/users/default.png" width="80px">
+                  <?php
+              }else{
+                  ?>
+                  <img class="img-md rounded-circle" src="assets/images/users/<?php echo $_SESSION['u_image'];?>" style="width: 40px" alt="Profile image">
+                  <?php
+              }
+
+                ?>
+                
+                <p class="mb-1 mt-3 font-weight-semibold"><?php echo $_SESSION['u_name'];?></p>
+                <p class="fw-light text-muted mb-0"><?php echo $_SESSION['u_mail'];?></p>
               </div>
-              <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>
+              <a class="dropdown-item" href="profile.php"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>
               <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-              <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+              <a class="dropdown-item" href="includes/logout.php"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
             </div>
           </li>
         </ul>

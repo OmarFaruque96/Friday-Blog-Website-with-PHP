@@ -1,4 +1,6 @@
-<?php include "includes/header.php"; ?>
+<?php 
+include "includes/header.php";
+?>
 
       <!-- partial -->
       <div class="main-panel">
